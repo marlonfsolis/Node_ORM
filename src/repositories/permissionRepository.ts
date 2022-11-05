@@ -24,7 +24,8 @@ export default class PermissionRepository
     async getPermissions(reqOp:IRequestReadListOptions): Promise<IResult<Model<IPermission, IPermission>[]>> {
         const permissions = await this.Permission.findAll({
             offset: reqOp.offsetRows,
-            limit: reqOp.fetchRows
+            limit: reqOp.fetchRows,
+            where : reqOp.filterJson
         });
 
         return new ResultOk<Model<IPermission, IPermission>[]>(permissions);
