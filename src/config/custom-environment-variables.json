@@ -1,9 +1,9 @@
 {
     "db": {
-        "username": "NODE_EXPRESS_TS_MYSQL__USERNAME",
-        "password": "NODE_EXPRESS_TS_MYSQL_PASSWORD",
-        "host": "NODE_EXPRESS_TS_MYSQL_HOST",
-        "name": "NODE_EXPRESS_TS_MYSQL_DBNAME"
+        "username": "NODE_ORM__USERNAME",
+        "password": "NODE_ORM_PASSWORD",
+        "host": "NODE_ORM_HOST",
+        "name": "NODE_ORM_DBNAME"
     },
-    "jwt-secret": "NODE_EXPRESS_TS_MYSQL_JWT_SECRET"
+    "jwt-secret": "NODE_ORM_JWT_SECRET"
 }
