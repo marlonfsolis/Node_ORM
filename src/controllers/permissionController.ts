@@ -3,10 +3,11 @@ import {validationResult} from "express-validator";
 
 import PermissionService from "../services/permissionService";
 import {
+    HttpResponseOk,
+    HttpResponseError,
     HttpResponseBadRequest,
     HttpResponseCreated,
-    HttpResponseInternalServerError, HttpResponseNotFound,
-    HttpResponseOk
+    HttpResponseInternalServerError
 } from "../shared/HttpResponse";
 import {IPermission} from "../dto/Permission";
 import {IErr} from "../shared/Err";
@@ -17,7 +18,7 @@ export const getPermissions = async (req:Request, res:Response) => {
 
     const result = await permServ.getPermissions(req.body);
     if (!result.success) {
-        return new HttpResponseInternalServerError(res, [result.err!]);
+        return new HttpResponseError(res, result);
     }
 
     const permissions = result.data;
@@ -37,10 +38,7 @@ export const createPermission = async (req: Request, res: Response) => {
     const p = req.body as IPermission;
     const result = await permServ.createPermission(p);
     if (!result.success || !result.data) {
-        const code = result.getErrorCode();
-        if (code === `400`)
-            return new HttpResponseBadRequest(res, [result.err!]);
-        return new HttpResponseInternalServerError(res,[result.err!]);
+        return new HttpResponseError(res, result);
     }
 
     return new HttpResponseCreated(res, result.data);

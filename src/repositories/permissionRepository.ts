@@ -41,7 +41,7 @@ export default class PermissionRepository
             const errorLogId = "0";
             const msg = "400|The permission name already exists.";
             return new ResultError(
-                new Err(msg, "sp_permissions_create", errorLogId)
+                new Err(msg, "repository.createPermission", errorLogId)
             )
         }
 

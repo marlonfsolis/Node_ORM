@@ -20,7 +20,7 @@ export default class PermissionService
             return await this.permRepo.getPermissions(reqOp);
         } catch (err) {
             // todo: Log error here.
-            return ResultError.getDefaultError<Model<IPermission, IPermission>[]>("",`permissionService.getPermissions`);
+            return ResultError.getDefaultError<Model<IPermission, IPermission>[]>("",`service.getPermissions`);
         }
     }
 
@@ -33,7 +33,7 @@ export default class PermissionService
             return await this.permRepo.createPermission(p);
         } catch (err) {
             // todo: Log error here.
-            return ResultError.getDefaultError<Model<IPermission, IPermission>>("",`permissionService.createPermission`);
+            return ResultError.getDefaultError<Model<IPermission, IPermission>>("",`service.createPermission`);
         }
     }
 
