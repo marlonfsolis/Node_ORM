@@ -32,22 +32,24 @@ export default class PermissionRepository
     }
 
     /** Create a permission */
-    // async createPermission(p:IPermission): Promise<IResult<IPermission>> {
-    //     let permission: IPermission|undefined;
-    //
-    //     const inValues = [JSON.stringify(p)];
-    //     const r = await db.call("sp_permissions_create", inValues,["@result"], this.pool);
-    //     const callResult  = r.getOutputVal<IOutputResult>("@result");
-    //
-    //     if (!callResult.success) {
-    //         return new ResultError(
-    //             new Err(callResult.msg, "sp_permissions_create", callResult.errorLogId.toString())
-    //         )
-    //     }
-    //
-    //     permission = r.getData<IPermission>(0)[0];
-    //     return new ResultOk(permission);
-    // }
+    async createPermission(p:IPermission): Promise<IResult<Model<IPermission, IPermission>>> {
+        let permission: Model<IPermission, IPermission>|undefined;
+
+        // Validate that name is not in use
+        const pFound = await this.Permission.findOne({ where: { name: p.name } });
+        if (pFound !== null) {
+            const errorLogId = "0";
+            const msg = "400|The permission name already exists.";
+            return new ResultError(
+                new Err(msg, "sp_permissions_create", errorLogId)
+            )
+        }
+
+        // Create the permission
+        permission = await this.Permission.create(p);
+
+        return new ResultOk(permission);
+    }
 
     /** Delete a permission */
     // async deletePermission(pName:string): Promise<IResult<IPermission>> {

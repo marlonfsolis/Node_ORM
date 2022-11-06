@@ -11,7 +11,7 @@ const router = Router();
 router.get('/', requestReadListValidator, PermissionController.getPermissions);
 
 /* POST a permission */
-// router.post('/', permissionValidator(), PermissionController.createPermission);
+router.post('/', permissionValidator(), PermissionController.createPermission);
 
 /* PUT a permission */
 // router.put('/:name', permissionValidator(), PermissionController.updatePermission);

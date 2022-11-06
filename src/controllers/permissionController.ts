@@ -25,26 +25,26 @@ export const getPermissions = async (req:Request, res:Response) => {
 };
 
 /** Post a permission */
-// export const createPermission = async (req: Request, res: Response) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         const errs = errors.array({ onlyFirstError: false }) as IErr[];
-//         return new HttpResponseBadRequest(res, errs);
-//     }
-//
-//     const permServ = new PermissionService(req.app.locals.pool);
-//
-//     const p = req.body as IPermission;
-//     const result = await permServ.createPermission(p);
-//     if (!result.success || !result.data) {
-//         const code = result.getErrorCode();
-//         if (code === `400`)
-//             return new HttpResponseBadRequest(res, [result.err!]);
-//         return new HttpResponseInternalServerError(res,[result.err!]);
-//     }
-//
-//     return new HttpResponseCreated(res, result.data);
-// };
+export const createPermission = async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errs = errors.array({ onlyFirstError: false }) as IErr[];
+        return new HttpResponseBadRequest(res, errs);
+    }
+
+    const permServ = new PermissionService(req.app.locals.sequelize);
+
+    const p = req.body as IPermission;
+    const result = await permServ.createPermission(p);
+    if (!result.success || !result.data) {
+        const code = result.getErrorCode();
+        if (code === `400`)
+            return new HttpResponseBadRequest(res, [result.err!]);
+        return new HttpResponseInternalServerError(res,[result.err!]);
+    }
+
+    return new HttpResponseCreated(res, result.data);
+};
 
 /** DELETE a permission */
 // export const deletePermission = async (req: Request, res: Response) => {

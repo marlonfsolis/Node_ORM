@@ -19,7 +19,8 @@ export default class PermissionService
         try {
             return await this.permRepo.getPermissions(reqOp);
         } catch (err) {
-            return ResultError.getDefaultError<Model<IPermission, IPermission>[]>(err,`permissionService.getPermissions`);
+            // todo: Log error here.
+            return ResultError.getDefaultError<Model<IPermission, IPermission>[]>("",`permissionService.getPermissions`);
         }
     }
 
@@ -27,13 +28,14 @@ export default class PermissionService
     /**
      * Create a permission
      */
-    // async createPermission(p:IPermission): Promise<IResult<IPermission>> {
-    //     try {
-    //         return await this.permRepo.createPermission(p);
-    //     } catch (err) {
-    //         return ResultError.getDefaultError<IPermission>(err,`permissionService.createPermission`);
-    //     }
-    // }
+    async createPermission(p:IPermission): Promise<IResult<Model<IPermission, IPermission>>> {
+        try {
+            return await this.permRepo.createPermission(p);
+        } catch (err) {
+            // todo: Log error here.
+            return ResultError.getDefaultError<Model<IPermission, IPermission>>("",`permissionService.createPermission`);
+        }
+    }
 
 
     /**
