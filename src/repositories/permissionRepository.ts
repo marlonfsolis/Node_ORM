@@ -72,22 +72,15 @@ export default class PermissionRepository
     }
 
     /** Get a permission */
-    // async getPermission(pName:string): Promise<IResult<IPermission>> {
-    //     let permission: IPermission|undefined;
-    //
-    //     const inValues = [pName];
-    //     const r = await db.call("sp_permissions_read", inValues,["@result"], this.pool);
-    //     const callResult  = r.getOutputVal<IOutputResult>("@result");
-    //
-    //     if (!callResult.success) {
-    //         return new ResultError(
-    //             new Err(callResult.msg, "sp_permissions_read", callResult.errorLogId.toString())
-    //         )
-    //     }
-    //
-    //     permission = r.getData<IPermission>(0)[0];
-    //     return new ResultOk(permission);
-    // }
+    async getPermission(pName:string): Promise<IResult<Model<IPermission, IPermission>>> {
+        const pFound = await this.Permission.findOne({ where: { name: pName } });
+        if (pFound === null) {
+            const errorLogId = "0";
+            return new ResultErrorNotFound(``,`repository.deletePermission`, errorLogId);
+        }
+
+        return new ResultOk(pFound);
+    }
 
     /** Update a permission */
     async updatePermission(pName:string, p:IPermission): Promise<IResult<Model<IPermission, IPermission>>> {

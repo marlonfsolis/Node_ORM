@@ -20,7 +20,7 @@ router.put('/:name', permissionValidator(), PermissionController.updatePermissio
 router.delete('/:name', PermissionController.deletePermission);
 
 /* GET a permission */
-// router.get('/:name', PermissionController.getPermission);
+router.get('/:name', PermissionController.getPermission);
 
 // export const usersRoutes = router;
 export default router;
