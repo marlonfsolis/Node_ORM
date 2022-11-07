@@ -1,4 +1,4 @@
-import {IResult, ResultError} from "../shared/Result";
+import {IResult, ResultError, ResultErrorInternalServer} from "../shared/Result";
 import {IPermission} from "../dto/Permission";
 import PermissionRepository from "../repositories/permissionRepository";
 import {IRequestReadListOptions} from "../shared/Request";
@@ -41,13 +41,14 @@ export default class PermissionService
     /**
      * Delete a permission
      */
-    // async deletePermission(pName:string): Promise<IResult<IPermission>> {
-    //     try {
-    //         return await this.permRepo.deletePermission(pName);
-    //     } catch (err) {
-    //         return ResultError.getDefaultError<IPermission>(err,`permissionService.deletePermission`);
-    //     }
-    // }
+    async deletePermission(pName:string): Promise<IResult<Model<IPermission, IPermission>>> {
+        try {
+            return await this.permRepo.deletePermission(pName);
+        } catch (err) {
+            // todo: Log error here.
+            return new ResultErrorInternalServer(``, `service.deletePermission`, `0`);
+        }
+    }
 
     /**
      * Get a permission

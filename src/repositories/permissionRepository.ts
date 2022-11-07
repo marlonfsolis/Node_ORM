@@ -1,9 +1,10 @@
 import { Model, ModelStatic, Sequelize, DataTypes} from "sequelize";
 
 import {IPermission} from "../dto/Permission";
-import {IResult, ResultOk, ResultError} from "../shared/Result";
+import {IResult, ResultOk, ResultError, ResultErrorNotFound} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IRequestReadListOptions} from "../shared/Request";
+
 
 
 export default class PermissionRepository
@@ -52,22 +53,23 @@ export default class PermissionRepository
     }
 
     /** Delete a permission */
-    // async deletePermission(pName:string): Promise<IResult<IPermission>> {
-    //     let permission: IPermission|undefined;
-    //
-    //     const inValues = [pName];
-    //     const r = await db.call("sp_permissions_delete", inValues,["@result"], this.pool);
-    //     const callResult  = r.getOutputVal<IOutputResult>("@result");
-    //
-    //     if (!callResult.success) {
-    //         return new ResultError(
-    //             new Err(callResult.msg, "sp_permissions_delete", callResult.errorLogId.toString())
-    //         )
-    //     }
-    //
-    //     permission = r.getData<IPermission>(0)[0];
-    //     return new ResultOk(permission);
-    // }
+    async deletePermission(pName:string): Promise<IResult<Model<IPermission, IPermission>>> {
+        // Validate that name is not in use
+        const pFound = await this.Permission.findOne({ where: { name: pName } });
+        if (pFound === null) {
+            const errorLogId = "0";
+            return new ResultErrorNotFound(``,`repository.deletePermission`, errorLogId);
+        }
+
+        // Delete permission
+        const delNum = await this.Permission.destroy({ where: { name: pName } });
+        if (delNum === 0) {
+            const errorLogId = "0";
+            return new ResultErrorNotFound(`The permission was not deleted.`,`repository.deletePermission`, errorLogId);
+        }
+
+        return new ResultOk(pFound);
+    }
 
     /** Get a permission */
     // async getPermission(pName:string): Promise<IResult<IPermission>> {

@@ -45,20 +45,17 @@ export const createPermission = async (req: Request, res: Response) => {
 };
 
 /** DELETE a permission */
-// export const deletePermission = async (req: Request, res: Response) => {
-//     const permServ = new PermissionService(req.app.locals.pool);
-//
-//     const pName = req.params.name;
-//     const result = await permServ.deletePermission(pName);
-//     if (!result.success || !result.data) {
-//         const code = result.getErrorCode();
-//         if (code === `400`) return new HttpResponseBadRequest(res, [result.err!]);
-//         if (code === `404`) return new HttpResponseNotFound(res, [result.err!]);
-//         return new HttpResponseInternalServerError(res,[result.err!]);
-//     }
-//
-//     return new HttpResponseCreated(res, result.data);
-// };
+export const deletePermission = async (req: Request, res: Response) => {
+    const permServ = new PermissionService(req.app.locals.sequelize);
+
+    const pName = req.params.name;
+    const result = await permServ.deletePermission(pName);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res,result);
+    }
+
+    return new HttpResponseOk(res, result.data);
+};
 
 
 /** GET a permission */

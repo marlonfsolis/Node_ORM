@@ -17,7 +17,7 @@ router.post('/', permissionValidator(), PermissionController.createPermission);
 // router.put('/:name', permissionValidator(), PermissionController.updatePermission);
 
 /* DELETE a permission */
-// router.delete('/:name', PermissionController.deletePermission);
+router.delete('/:name', PermissionController.deletePermission);
 
 /* GET a permission */
 // router.get('/:name', PermissionController.getPermission);
