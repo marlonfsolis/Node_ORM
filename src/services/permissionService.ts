@@ -64,11 +64,11 @@ export default class PermissionService
     /**
      * Update a permission
      */
-    // async updatePermission(pName:string, p:IPermission): Promise<IResult<IPermission>> {
-    //     try {
-    //         return await this.permRepo.updatePermission(pName, p);
-    //     } catch (err) {
-    //         return ResultError.getDefaultError<IPermission>(err,`permissionService.getPermission`);
-    //     }
-    // }
+    async updatePermission(pName:string, p:IPermission): Promise<IResult<Model<IPermission, IPermission>>> {
+        try {
+            return await this.permRepo.updatePermission(pName, p);
+        } catch (err) {
+            return new ResultErrorInternalServer(``, `service.updatePermission`, `0`);
+        }
+    }
 }

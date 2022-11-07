@@ -76,24 +76,21 @@ export const deletePermission = async (req: Request, res: Response) => {
 
 
 /** Put a permission */
-// export const updatePermission = async (req: Request, res: Response) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         const errs = errors.array({ onlyFirstError: false }) as IErr[];
-//         return new HttpResponseBadRequest(res, errs);
-//     }
-//
-//     const permServ = new PermissionService(req.app.locals.pool);
-//
-//     const pName = req.params.name;
-//     const p = req.body as IPermission;
-//     const result = await permServ.updatePermission(pName, p);
-//     if (!result.success || !result.data) {
-//         const code = result.getErrorCode();
-//         if (code === `400`) return new HttpResponseBadRequest(res, [result.err!]);
-//         if (code === `404`) return new HttpResponseNotFound(res, [result.err!]);
-//         return new HttpResponseInternalServerError(res,[result.err!]);
-//     }
-//
-//     return new HttpResponseOk(res, result.data);
-// };
+export const updatePermission = async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errs = errors.array({ onlyFirstError: false }) as IErr[];
+        return new HttpResponseBadRequest(res, errs);
+    }
+
+    const permServ = new PermissionService(req.app.locals.sequelize);
+
+    const pName = req.params.name;
+    const p = req.body as IPermission;
+    const result = await permServ.updatePermission(pName, p);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res,result);
+    }
+
+    return new HttpResponseOk(res, result.data);
+};

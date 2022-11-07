@@ -1,7 +1,7 @@
 import { Model, ModelStatic, Sequelize, DataTypes} from "sequelize";
 
 import {IPermission} from "../dto/Permission";
-import {IResult, ResultOk, ResultError, ResultErrorNotFound} from "../shared/Result";
+import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IRequestReadListOptions} from "../shared/Request";
 
@@ -90,20 +90,32 @@ export default class PermissionRepository
     // }
 
     /** Update a permission */
-    // async updatePermission(pName:string, p:IPermission): Promise<IResult<IPermission>> {
-    //     let permission: IPermission|undefined;
-    //
-    //     const inValues = [pName, JSON.stringify(p)];
-    //     const r = await db.call("sp_permissions_update", inValues,["@result"], this.pool);
-    //     const callResult  = r.getOutputVal<IOutputResult>("@result");
-    //
-    //     if (!callResult.success) {
-    //         return new ResultError(
-    //             new Err(callResult.msg, "sp_permissions_update", callResult.errorLogId.toString())
-    //         )
-    //     }
-    //
-    //     permission = r.getData<IPermission>(0)[0];
-    //     return new ResultOk(permission);
-    // }
+    async updatePermission(pName:string, p:IPermission): Promise<IResult<Model<IPermission, IPermission>>> {
+
+        // Validate the permission name
+        let pFound = await this.Permission.findOne({ where: { name: pName } });
+        if (pFound === null) {
+            const errorLogId = `0`;
+            return new ResultErrorNotFound(``, `repository.updatePermission`, errorLogId);
+        }
+
+        // Validate new name
+        if (pName !== p.name) {
+            pFound = await this.Permission.findOne({ where: { name: p.name } });
+            if (pFound !== null) {
+                const errorLogId = `0`;
+                const msg = `The new permission name is already in use.`;
+                return new ResultErrorBadRequest(msg, `repository.updatePermission`, errorLogId);
+            }
+        }
+
+        const updateCount = await this.Permission.update(p, { where: { name: pName } });
+        if (updateCount[0] === 0) {
+            const errorLogId = "0";
+            return new ResultErrorNotFound(`The permission was not updated.`,`repository.updatePermission`, errorLogId);
+        }
+
+        pFound = await this.Permission.findOne({ where: { name: p.name } });
+        return new ResultOk(pFound!);
+    }
 }
