@@ -1,5 +1,5 @@
 import {Sequelize, DataTypes} from "sequelize";
-import {initModels} from "../models";
+import {initModels} from "../../sequelize/models";
 
 import {Configuration as config} from '../utils/configuration';
 import {dbDebug} from '../startup/debuggers';
