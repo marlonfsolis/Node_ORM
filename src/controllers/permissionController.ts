@@ -21,6 +21,9 @@ export const getPermissions = async (req:Request, res:Response) => {
         return new HttpResponseError(res, result);
     }
 
+    // Here we can control what to return to the final user
+    // Mapping the data to a dto class
+    // result.data.map(d => new DataDto(d))
     const permissions = result.data;
     return new HttpResponseOk(res, permissions);
 };

@@ -1,10 +1,10 @@
-import { Model, ModelStatic, Sequelize, DataTypes} from "sequelize";
+import {Model, ModelStatic, QueryTypes, Sequelize} from "sequelize";
 
 import {IPermission} from "../dto/Permission";
-import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
+import {IResult, ResultError, ResultErrorBadRequest, ResultErrorNotFound, ResultOk} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IRequestReadListOptions} from "../shared/Request";
-
+import {QueryDefaultOptions} from "../shared/Database";
 
 
 export default class PermissionRepository
@@ -23,6 +23,15 @@ export default class PermissionRepository
      * Get a permission list
      */
     async getPermissions(reqOp:IRequestReadListOptions): Promise<IResult<Model<IPermission, IPermission>[]>> {
+        // const sql = `
+        //     select * from Permission;
+        // `;
+        // const permissions = await this.sequelize.query(sql,{
+        //     ...QueryDefaultOptions
+        // }) as Model<IPermission, IPermission>[]>;
+        // // console.log(permissions);
+        // return new ResultOk<Model<IPermission, IPermission>[]>>(permissions);
+
         const permissions = await this.Permission.findAll({
             offset: reqOp.offsetRows,
             limit: reqOp.fetchRows,
@@ -45,6 +54,17 @@ export default class PermissionRepository
                 new Err(msg, "repository.createPermission", errorLogId)
             )
         }
+
+        // Create the permission using query raw
+        // const sql = `
+        //     insert into Permission(name, description) values (:name, :description);
+        //     select * from Permission where name = :name;
+        // `;
+        // const [meta, pList] = await this.sequelize.query(sql,{
+        //     ...QueryDefaultOptions,
+        //     replacements:{name:`Permission9`, description:`Permission 9`}
+        // });
+        // console.log((pList as any)[0]);
 
         // Create the permission
         permission = await this.Permission.create(p);

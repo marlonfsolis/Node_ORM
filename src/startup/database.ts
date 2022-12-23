@@ -2,8 +2,6 @@ import {Express} from "express";
 
 import {dbDebug} from './debuggers';
 import sequelize from "../shared/Database";
-import models_group from "../../sequelize/models/group";
-import { Model, ModelStatic, Sequelize, DataTypes} from "sequelize";
 
 
 const createDbConnection = (app: Express) => {
